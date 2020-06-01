@@ -5,11 +5,20 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node build/index.js"
+    "start:server": "node build/server.js",
+    "start": "node build/index.js" 
   },
   "author": "Anton Shishov",
   "license": "ISC",
   "dependencies": {
-    "typescript": "^3.9.3"
+    "@types/express": "^4.17.6",
+    "fs": "^0.0.1-security",
+    "typescript": "^3.9.3",
+    "zulip-js": "^2.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.6",
+    "express": "^4.17.1",
+    "googleapis": "39"
   }
 }
