@@ -2,6 +2,8 @@ import fs from "fs";
 import readline from "readline";
 import { google } from "googleapis";
 
+import { fetchMark } from "../utils/fetchMark";
+
 // If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly"];
 // The file token.json stores the user's access and refresh tokens, and is
@@ -97,5 +99,9 @@ function listCourses(auth: any) {
     }
   );
 }
+
+const submitMark = (auth: any) => {
+  const classroom = google.classroom({ version: "v1", auth });
+};
 
 export default getEntryPointToClassroom;
