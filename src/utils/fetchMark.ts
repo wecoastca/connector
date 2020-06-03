@@ -10,3 +10,4 @@ export const fetchMark = () => {
       console.error(error);
     });
 };
+

@@ -102,6 +102,7 @@ function listCourses(auth: any) {
 
 const submitMark = (auth: any) => {
   const classroom = google.classroom({ version: "v1", auth });
+  fetchMark();
 };
 
 export default getEntryPointToClassroom;
