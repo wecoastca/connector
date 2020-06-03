@@ -1,4 +1,3 @@
-import getEntryPointToClassroom from './lib/classroom/classroomController';
-import expressApp from './server';
+import getEntryPointToClassroom from './lib/classroomController';
 
 getEntryPointToClassroom();

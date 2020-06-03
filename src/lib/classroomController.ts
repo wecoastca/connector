@@ -7,8 +7,8 @@ const SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly"];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = "./token.json";
-const CREDENTIALS_PATH = "./src/lib/classroom/credentials.json";
+const TOKEN_PATH = "src/config/token.json";
+const CREDENTIALS_PATH = "src/config/credentials.json";
 
 const getEntryPointToClassroom = () => {
   // Load client secrets from a local file.
