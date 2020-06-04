@@ -2,13 +2,14 @@ import { init as initClassroom } from "./lib/classroomController";
 import { start as startServer } from "./server";
 
 const bootstrap = async () => {
-  await initClassroom();
+  const authClassroom = await initClassroom();
   //await initZulip();
+  return { authClassroom: authClassroom };
 };
 
 const main = async () => {
-  await bootstrap();
-  startServer();
+  const auth = await bootstrap();
+  startServer(auth.authClassroom);
 };
 
 main();

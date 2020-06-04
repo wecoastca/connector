@@ -13,6 +13,10 @@ const CREDENTIALS_PATH = "src/config/credentials.json";
 export const init = async () => {
   //TODO: асинхронный вызов
   getEntryPointToClassroom()
+    .then()
+    .then((auth) => {
+      return auth;
+    });
 };
 
 const getEntryPointToClassroom = () => {
@@ -78,7 +82,7 @@ function getNewToken(oAuth2Client: any) {
           if (err) reject(err);
           console.log("Token stored to", TOKEN_PATH);
         });
-       resolve(oAuth2Client);
+        resolve(oAuth2Client);
       });
     });
   });
@@ -114,7 +118,22 @@ export const submitMark = (
   course_name: any,
   task_name: any,
   student_email: any,
-  mark: any
+  mark: any,
+  auth: any
 ) => {
+
+  let userId = await this.
+  let conf = {
+    requestBody: {
+      "assignedGrade" : mark
+    },
+    courseId: this.courseId,
+    courseWorkId: this.courseWorkId,
+    id: subId,
+    ...updateMask
+  }
+
+  const classroom = google.classroom({ version: "v1", auth });
+  classroom.courses.courseWork.studentSubmissions.patch(conf)
   console.log(course_name, task_name, student_email, mark);
 };
