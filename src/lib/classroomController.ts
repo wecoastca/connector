@@ -1,6 +1,10 @@
 import fs from "fs";
 import readline from "readline";
-import { google } from "googleapis";
+import { google, GoogleApis } from "googleapis";
+import { analytics } from "googleapis/build/src/apis/analytics";
+import { rejects } from "assert";
+import { auth } from "googleapis/build/src/apis/abusiveexperiencereport";
+import { resolve } from "dns";
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly"];
@@ -113,6 +117,78 @@ function listCourses(auth: any) {
     }
   );
 }
+const getCoursesList = (auth: any) => {
+  return new Promise((resolve, reject) => {
+    const classroom = google.classroom({ version: "v1", auth });
+    classroom.courses.list(
+      {
+        pageSize: 10,
+      },
+      (err, res) => {
+        if (err) reject(err);
+        resolve(res.data.courses);
+        /*   if (courses && courses.length) {
+          console.log("Courses:");
+          courses.forEach((course) => {
+            console.log(`${course.name} (${course.id})`);
+          });
+        } else {
+          console.log("No courses found.");
+        }*/
+      }
+    );
+  });
+};
+
+const getCourseWorkList = (auth: any, courseId: any) => {
+  return new Promise((resolve, reject) => {
+    const classroom = google.classroom({ version: "v1", auth });
+    classroom.courses.courseWork.list(
+      {
+        courseId: courseId,
+      },
+      (err: Error, res: any) => {
+        if (err) reject(err);
+        resolve(res.data.courses.courseWork);
+      }
+    );
+  });
+};
+
+const getStudentSubmissionsList = (
+  auth: any,
+  courseId: any,
+  courseWorkId: any
+) => {
+  return new Promise((resolve, reject) => {
+    const classroom = google.classroom({ version: "v1", auth });
+    classroom.courses.courseWork.studentSubmissions.list(
+      {
+        courseId: courseId,
+        courseWorkId: courseWorkId,
+      },
+      (err: Error, res: any) => {
+        if (err) reject(err);
+        resolve(res.data.courses.courseWork.studentSubmissions);
+      }
+    );
+  });
+};
+
+const getStudentsList = (auth: any, courseId: any) => {
+  return new Promise((resolve, reject) => {
+    const classroom = google.classroom({ version: "v1", auth });
+    classroom.courses.students.list(
+      {
+        courseId: courseId,
+      },
+      (err: Error, res: any) => {
+        if (err) reject(err);
+        resolve(res.data.courses.students);
+      }
+    );
+  });
+};
 
 export const submitMark = (
   course_name: any,
@@ -121,19 +197,44 @@ export const submitMark = (
   mark: any,
   auth: any
 ) => {
-
-  let userId = await this.
-  let conf = {
-    requestBody: {
-      "assignedGrade" : mark
-    },
-    courseId: this.courseId,
-    courseWorkId: this.courseWorkId,
-    id: subId,
-    ...updateMask
-  }
-
   const classroom = google.classroom({ version: "v1", auth });
-  classroom.courses.courseWork.studentSubmissions.patch(conf)
-  console.log(course_name, task_name, student_email, mark);
+  classroom.courses.courseWork.list();
+  //@ts-ignore
+  getCoursesList(auth).then((courses) => {
+    //@ts-ignore
+    const course = courses.find((course) => course.name == course_name);
+    getCourseWorkList(auth, course.id).then((courseWorks) => {
+      //@ts-ignore
+      const courseWork = courseWorks.find((courseWork) => {
+        courseWork.title == task_name;
+      });
+      getStudentSubmissionsList(auth, course.id, courseWork.id).then(
+        (submissions) => {
+          getStudentsList(auth, course.id).then((students) => {
+            //@ts-ignore
+            const student = students.find((student) => {
+              student.profile.emailAddress = student_email;
+            });
+            //@ts-ignore
+            const studentSubmission = submissions.find((submission) => {
+              submission.userId = student.userId;
+
+              let conf = {
+                requestBody: {
+                  assignedGrade: mark,
+                },
+                courseId: course.id,
+                courseWorkId: courseWork.id,
+                id: studentSubmission.id,
+                //@ts-ignore
+                ...updateMask,
+              };
+
+              studentSubmission.patch(conf);
+            });
+          });
+        }
+      );
+    });
+  });
 };
