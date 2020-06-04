@@ -163,8 +163,6 @@ export const submitMark = (
   mark: any,
   auth: any
 ) => {
-  const classroom = google.classroom({ version: "v1", auth });
-  classroom.courses.courseWork.list();
   //@ts-ignore
   getCoursesList(auth).then((courses) => {
     //@ts-ignore
