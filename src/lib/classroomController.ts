@@ -91,32 +91,6 @@ function getNewToken(oAuth2Client: any) {
     });
   });
 }
-
-/**
- * Lists the first 10 courses the user has access to.
- *
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listCourses(auth: any) {
-  const classroom = google.classroom({ version: "v1", auth });
-  classroom.courses.list(
-    {
-      pageSize: 10,
-    },
-    (err, res) => {
-      if (err) return console.error("The API returned an error: " + err);
-      const courses = res.data.courses;
-      if (courses && courses.length) {
-        console.log("Courses:");
-        courses.forEach((course) => {
-          console.log(`${course.name} (${course.id})`);
-        });
-      } else {
-        console.log("No courses found.");
-      }
-    }
-  );
-}
 const getCoursesList = (auth: any) => {
   return new Promise((resolve, reject) => {
     const classroom = google.classroom({ version: "v1", auth });
@@ -127,14 +101,6 @@ const getCoursesList = (auth: any) => {
       (err, res) => {
         if (err) reject(err);
         resolve(res.data.courses);
-        /*   if (courses && courses.length) {
-          console.log("Courses:");
-          courses.forEach((course) => {
-            console.log(`${course.name} (${course.id})`);
-          });
-        } else {
-          console.log("No courses found.");
-        }*/
       }
     );
   });
