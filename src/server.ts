@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { submitMark } from "./lib/classroomController";
+import { bigboy } from "./lib/classroomController";
 
 const app = express();
 
@@ -15,12 +15,13 @@ export const start = (auth: any) => {
       student_email: req.query.student_email,
       mark: req.query.mark,
     });
-    submitMark(
+    bigboy(
       req.query.course_name,
       req.query.task_name,
       req.query.student_email,
       req.query.mark,
-      auth
+      //@ts-ignore
+      global.oAuth2Client
     );
   });
 };
