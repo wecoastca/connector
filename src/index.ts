@@ -1,5 +1,5 @@
 import classroomAuth from "./lib/classroomAuth";
-import { start as startServer, start } from "./server";
+import { start as startServer } from "./server";
 
 const bootstrap = async () => {
   await classroomAuth.authorize(classroomAuth.credentials);

@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { bigboy, submitMark } from "./lib/classroomController";
 import classroomAuth from "./lib/classroomAuth";
 import classroomSubmit from './lib/classroomSubmit';
 

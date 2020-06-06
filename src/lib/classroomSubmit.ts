@@ -111,10 +111,34 @@ class ClassroomSubmit {
         conf,
         (err: Error, res: any) => {
           if (err) reject(err);
+          resolve(res.data.StudentSubmission)
         }
       );
     });
   };
+
+//   createCourseWork = async (auth: any) => {
+//       return new Promise((resolve, reject)=>{
+//         const classroom = google.classroom({ version: "v1", auth });
+
+//         const courseWorkFields = {
+//             "title" : "lupa",
+//             "description" : "Экзамен по темам массивов и матриц",
+//             //@ts-ignore
+//             "materials" : [],
+//             'state' : 'PUBLISHED',
+//             'maxPoints' : 100,
+//             'workType' : 'ASSIGNMENT'
+//         }
+    
+//         classroom.courses.courseWork.create({
+//             courseId: this.course.id,
+//             requestBody: courseWorkFields
+//         })
+//         .then(res => resolve(res))
+//         .catch(err => reject(err));
+//       })
+//   }
 
   submitMark = async (
     auth: any,
@@ -130,6 +154,7 @@ class ClassroomSubmit {
           (course: Course) => course.name == course_name
         ))
     );
+    // await this.createCourseWork(auth);
     await this.getCourseWorkList(auth, this.course.id).then(
       (courseWorks: CourseWorks) =>
         (this.courseWork = courseWorks.find(
@@ -163,7 +188,7 @@ class ClassroomSubmit {
       ...updateMask,
     };
 
-    await this.patchMark(conf, auth);
+    await this.patchMark(conf, auth).then(log=>console.log(log));
   };
 }
 
