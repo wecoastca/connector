@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
-import { bigboy } from "./lib/classroomController";
+import { bigboy, submitMark } from "./lib/classroomController";
 import classroomAuth from "./lib/classroomAuth";
+import classroomSubmit from './lib/classroomSubmit';
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.get("/submission", function (req: Request, res: Response) {
     student_email: req.query.student_email,
     mark: req.query.mark,
   });
-  bigboy(
+  classroomSubmit.submitMark(
     classroomAuth.OAuth2Token,
     req.query.course_name,
     req.query.task_name,

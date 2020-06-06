@@ -129,7 +129,9 @@ const getCourseWorkList = (auth: any, courseId: any) => {
       },
       (err: Error, res: any) => {
         if (err) reject(err);
-        resolve(res.data.courses.courseWork);
+        console.log('>>>GETTING COURSEWORKS');
+        const courseWorks = res.data.courseWork;
+        resolve(courseWorks);
       }
     );
   });
@@ -149,7 +151,7 @@ const getStudentSubmissionsList = (
       },
       (err: Error, res: any) => {
         if (err) reject(err);
-        resolve(res.data.courses.courseWork.studentSubmissions);
+        resolve(res.data.studentSubmissions);
       }
     );
   });
@@ -164,21 +166,21 @@ const getStudentsList = (auth: any, courseId: any) => {
       },
       (err: Error, res: any) => {
         if (err) reject(err);
-        resolve(res.data.courses.students);
+        resolve(res.data.students);
       }
     );
   });
 };
 
-const submitMark = (
+export const submitMark = async (
+  auth: any,
   course_name: any,
   task_name: any,
   student_email: any,
-  mark: any,
-  auth: any
+  mark: any
 ) => {
   //@ts-ignore
-  getCoursesList(auth).then((courses) => {
+  await getCoursesList(auth).then((courses) => {
     //@ts-ignore
     const course = courses.find((course) => course.name == course_name);
     getCourseWorkList(auth, course.id).then((courseWorks) => {
