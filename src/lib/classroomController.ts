@@ -25,11 +25,11 @@ export const init = async () => {
   console.log(">>>INSIDE CLASSROOM API");
   // Load client secrets from a local file.
   fs.readFile(CREDENTIALS_PATH, (err, content) => {
-       //fs promises api
-      if (err) return console.log(err);
-      console.log(">>>READ CREDENTIALS FILE");
-      // Authorize a client with credentials, then call the Google Classroom API.
-      authorize(JSON.parse(content.toString()));
+    //fs promises api
+    if (err) return console.log(err);
+    console.log(">>>READ CREDENTIALS FILE");
+    // Authorize a client with credentials, then call the Google Classroom API.
+    authorize(JSON.parse(content.toString()));
   });
 };
 
@@ -39,7 +39,7 @@ export const init = async () => {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-const authorize = (credentials: any) => {
+const authorize = async (credentials: any) => {
   const { client_secret, client_id, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
@@ -50,18 +50,18 @@ const authorize = (credentials: any) => {
   console.log(">>>GET OAUTH2 TOKEN");
 
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
+  await fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) {
       console.log(">>>CREATE NEW TOKEN");
       return getNewToken(oAuth2Client);
     }
     console.log(">>>READ TOKEN JSON");
     oAuth2Client.setCredentials(JSON.parse(token.toString()));
-    console.log('>>>OAUTH2 TOKEN READY');
-    //@ts-ignore
-    global.oAuth2Client = oAuth2Client;
+    console.log(">>>OAUTH2 TOKEN READY");
+
+    console.log(oAuth2Client);
   });
-  console.log('>>> READING IS FINISHED')
+  console.log(">>> READING IS FINISHED");
 };
 
 /**
@@ -71,7 +71,7 @@ const authorize = (credentials: any) => {
  * @param {getEventsCallback} callback The callback for the authorized client.
  */
 function getNewToken(oAuth2Client: any) {
-  console.log('>>>GENERATE AUTH URL');
+  console.log(">>>GENERATE AUTH URL");
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,

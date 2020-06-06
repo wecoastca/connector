@@ -1,15 +1,16 @@
-import { init as initClassroom } from "./lib/classroomController";
-import { start as startServer } from "./server";
+import classroomAuth from "./lib/classroomAuth";
+import { start as startServer, start } from "./server";
+import { waitingForRequest } from "./server";
 
 const bootstrap = async () => {
-  initClassroom();
+  const classroomAuthInstance = classroomAuth.getInstance();
+  return classroomAuthInstance;
   //await initZulip();
 };
 
-const main = async () => {
-  await bootstrap();
-  //@ts-ignore
-  startServer(global.oAuth2Client);
+const main = () => {
+  startServer();
+  bootstrap().then((auth) => waitingForRequest(auth.token));
 };
 
 main();

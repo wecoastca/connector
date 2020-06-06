@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "./build",
     "target": "es5",
-    "sourceMap": false,
+    "sourceMap": true,
     "lib": [],
     "noImplicitAny": true,
     "esModuleInterop": true,
