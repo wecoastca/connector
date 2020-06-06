@@ -111,7 +111,6 @@ class ClassroomSubmit {
         conf,
         (err: Error, res: any) => {
           if (err) reject(err);
-          resolve(res.data.StudentSubmission);
         }
       );
     });
@@ -124,16 +123,7 @@ class ClassroomSubmit {
     student_email: any,
     mark: any
   ) => {
-    let conf = {
-      requestBody: {
-        assignedGrade: mark,
-      },
-      courseId: this.course.id,
-      courseWorkId: this.courseWork.id,
-      id: this.studentSubmission.id,
-      //@ts-ignore
-      ...updateMask,
-    };
+    let  updateMask = {'updateMask' : 'assignedGrade'};
     await this.getCoursesList(auth).then(
       (courses: Courses) =>
         (this.course = courses.find(
@@ -141,33 +131,39 @@ class ClassroomSubmit {
         ))
     );
     await this.getCourseWorkList(auth, this.course.id).then(
-      (courseWorks: CourseWorks) => {
-        this.courseWork = courseWorks.find((courseWork: CourseWork) => {
-          courseWork.title == task_name;
-        });
-      }
+      (courseWorks: CourseWorks) =>
+        (this.courseWork = courseWorks.find(
+          (courseWork: CourseWork) => courseWork.title == task_name
+        ))
     );
     await this.getStudentsList(auth, this.course.id).then(
-      (students: Students) => {
-        this.student = students.find((student: Student) => {
-          student.profile.emailAddress = student_email;
-        });
-      }
+      (students: Students) =>
+        (this.student = students.find(
+          (student: Student) => student.profile.emailAddress = student_email
+        ))
     );
     await this.getStudentSubmissionsList(
       auth,
       this.course.id,
       this.courseWork.id
-    ).then((submissions: StudentSubmissions) => {
-      this.studentSubmission = submissions.find(
-        (submission: StudentSubmission) => {
-          submission.userId = this.student.userId;
-        }
-      );
-    });
-    await this.patchMark(conf, auth).then((log) =>
-      console.log(`updated submission ${log}`)
+    ).then(
+      (submissions: StudentSubmissions) =>
+        (this.studentSubmission = submissions.find(
+          (submission: StudentSubmission) => submission.userId = this.student.userId
+        ))
     );
+
+    let conf = {
+      requestBody: {
+        assignedGrade: mark,
+      },
+      courseId: this.course.id,
+      courseWorkId: this.courseWork.id,
+      id: this.studentSubmission.id,
+      ...updateMask,
+    };
+
+    await this.patchMark(conf, auth);
   };
 }
 
