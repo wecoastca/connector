@@ -1,2 +1,2 @@
-type Token = string;
-type Credentials = string;
+type Token = any;
+type Credentials = any;

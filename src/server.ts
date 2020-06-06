@@ -10,20 +10,18 @@ export const start = () => {
   });
 };
 
-export const waitingForRequest = (auth: any) => {
-  app.get("/submission", function (req: Request, res: Response) {
-    res.json({
-      course_name: req.query.course_name,
-      task_name: req.query.task_name,
-      student_email: req.query.student_email,
-      mark: req.query.mark,
-    });
-    bigboy(
-      auth,
-      req.query.course_name,
-      req.query.task_name,
-      req.query.student_email,
-      req.query.mark
-    );
+app.get("/submission", function (req: Request, res: Response) {
+  res.json({
+    course_name: req.query.course_name,
+    task_name: req.query.task_name,
+    student_email: req.query.student_email,
+    mark: req.query.mark,
   });
-};
+  bigboy(
+    classroomAuth.OAuth2Token,
+    req.query.course_name,
+    req.query.task_name,
+    req.query.student_email,
+    req.query.mark
+  );
+});
